@@ -1,0 +1,11 @@
+.board {
+    background-color: grey;
+    width: fit-content;
+    display: grid;
+    grid-template-columns: repeat(3, 200px);
+}
+
+.board>div {
+    aspect-ratio: 1;
+    border: 1px solid black;
+}
