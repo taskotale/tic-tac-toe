@@ -8,18 +8,6 @@ let gameBoard = [
     ['', '', ''],
 ];
 
-(findAvailableSpots = (board) => {
-    let availableSpots =[];
-    for (let i = 0; i < 3; i++) {
-        for (let j = 0; j < 3; j++) {
-            if (board[i][j] == '') {
-                availableSpots.push(board[i][j])
-            }
-        }
-    }
-    return availableSpots
-})(gameBoard);
-
 (createBoardOnScreen = (whereTo) => {
     for (let i = 0; i < 3; i++) {
         for (let j = 0; j < 3; j++) {
@@ -31,6 +19,19 @@ let gameBoard = [
     }
 })((getIdElementFromDom('board')));
 
+(findAvailableSpots = (board) => {
+    let availableSpots = [];
+    for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+            if (board[i][j] == '') {
+                availableSpots.push(board[i][j])
+            }
+        }
+    }
+    return availableSpots
+})(gameBoard);
+
+
 (player = (sign, turn) => {
     let playerTurn = turn;
     return {
@@ -41,6 +42,13 @@ let gameBoard = [
 
 const playerOne = player('X', true);
 const playerTwo = player('O', false);
+
+(checkTurn = (player, otherPlayer) => {
+    if (!player.isTurn()) {
+        return player.sign
+    }
+    return otherPlayer.sign
+});
 
 (checkWinner = (board) => {
     let winner;
@@ -67,23 +75,23 @@ const playerTwo = player('O', false);
         }
         return winner
     }
+    if (findAvailableSpots(board).length==0) {
+        return 'it is a tie'
+    } 
+        return winnerIs()
+
+
 });
 
-    (gamePlay = (whereToLook, firstPlayer, secondPlayer) => {
-        const grid = whereToLook.querySelectorAll('div');
-        grid.forEach(tile => {
-            tile.addEventListener('click', e => {
-                let playPosition = e.target;
-                playPosition.textContent = checkSign(firstPlayer, secondPlayer);
-                gameBoard[playPosition.id][playPosition.classList] = playPosition.textContent;
-                checkWinner(gameBoard)
-            }, { once: true })
-        })
-    })((getIdElementFromDom('board')), playerOne, playerTwo);
 
-(checkSign = (player, otherPlayer) => {
-    if (!player.isTurn()) {
-        return player.sign
-    }
-    return otherPlayer.sign
-});
+(gamePlay = (whereToLook, firstPlayer, secondPlayer) => {
+    const grid = whereToLook.querySelectorAll('div');
+    grid.forEach(tile => {
+        tile.addEventListener('click', e => {
+            let playPosition = e.target;
+            playPosition.textContent = checkTurn(firstPlayer, secondPlayer);
+            gameBoard[playPosition.id][playPosition.classList] = playPosition.textContent;
+            console.log(checkWinner(gameBoard))
+        }, { once: true })
+    })
+})((getIdElementFromDom('board')), playerOne, playerTwo);
