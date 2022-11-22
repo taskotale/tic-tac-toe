@@ -51,7 +51,7 @@ const playerTwo = player('O', false);
 });
 
 (checkWinner = (board) => {
-    let winner;
+    let winner
     areEqual = (a, b, c) => {
         return (a == b && b == c && a != '')
     }
@@ -75,23 +75,47 @@ const playerTwo = player('O', false);
         }
         return winner
     }
-    if (findAvailableSpots(board).length==0) {
-        return 'it is a tie'
-    } 
-        return winnerIs()
 
-
+    if (findAvailableSpots(board).length == 0) {
+        return 'it`s a tie'
+    }
+    return winnerIs();
 });
 
 
 (gamePlay = (whereToLook, firstPlayer, secondPlayer) => {
     const grid = whereToLook.querySelectorAll('div');
-    grid.forEach(tile => {
-        tile.addEventListener('click', e => {
+    for (let i = 0; i < grid.length; i++) {
+        grid[i].addEventListener('click', e => {
             let playPosition = e.target;
             playPosition.textContent = checkTurn(firstPlayer, secondPlayer);
             gameBoard[playPosition.id][playPosition.classList] = playPosition.textContent;
             console.log(checkWinner(gameBoard))
-        }, { once: true })
-    })
+            console.log('who '+(checkWinner(gameBoard) === ('X' | 'O')))
+            if (checkWinner(gameBoard) === ('X' || 'O')) {
+                alert('winner is: ' + checkWinner(gameBoard))
+                confirm('do you want to play again?') ? newGame() : console.log('no')
+            }
+        },
+            { once: true })
+    }
 })((getIdElementFromDom('board')), playerOne, playerTwo);
+
+
+const newGame = () => {
+    gameBoard = [
+        ['', '', ''],
+        ['', '', ''],
+        ['', '', ''],
+    ];
+    (removeOldBoard = (domBoard) => {
+        while (domBoard.firstChild) {
+            domBoard.removeChild(domBoard.firstChild);
+        }
+    })((getIdElementFromDom('board')));
+    createBoardOnScreen(getIdElementFromDom('board'));
+    gamePlay((getIdElementFromDom('board')), playerOne, playerTwo);
+};
+
+(getIdElementFromDom('new-game')).addEventListener('click', newGame)
+
