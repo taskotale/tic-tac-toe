@@ -92,7 +92,7 @@ const playerTwo = player('O', false);
             gameBoard[playPosition.id][playPosition.classList] = playPosition.textContent;
             console.log(checkWinner(gameBoard))
             console.log('who '+(checkWinner(gameBoard) === ('X' | 'O')))
-            if (checkWinner(gameBoard) === ('X' || 'O')) {
+        if (checkWinner(gameBoard) === 'X' || checkWinner(gameBoard) === 'O') {
                 alert('winner is: ' + checkWinner(gameBoard))
                 confirm('do you want to play again?') ? newGame() : console.log('no')
             }
