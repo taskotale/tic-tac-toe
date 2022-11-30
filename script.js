@@ -15,34 +15,41 @@ const playerTwo = player('O', false);
     const selectPlayerOne = document.createElement('div');
 
         const inputPlayerName = document.createElement('input');
-        selectPlayerOne.appendChild(inputPlayerName)
-        inputPlayerName.addEventListener('keyup', e => { players[0].name = inputPlayerName.value })
-        const firstPlayerSign = document.createElement('div')
-        firstPlayerSign.classList = 'first-player'
-        selectPlayerOne.appendChild(firstPlayerSign)
+        selectPlayerOne.appendChild(inputPlayerName);
+        inputPlayerName.addEventListener('keyup', e => { players[0].name = inputPlayerName.value });
+        const firstPlayerSign = document.createElement('div');
+        firstPlayerSign.classList = 'first-player';
+        selectPlayerOne.appendChild(firstPlayerSign);
         
     const selectPlayerTwo = document.createElement('div');
     selectPlayerTwo.classList = 'second-player'
         const playerTwoHuman = document.createElement('div');
         playerTwoHuman.textContent='HUMAN';
-        playerTwoHuman.addEventListener('click', e=>playerTwoHumanSelection(selectPlayerTwo, playerTwoComputer, playerTwoHuman),{ once: true })
+        playerTwoHuman.addEventListener('click', e=>playerTwoHumanSelection(selectPlayerTwo, playerTwoComputer, playerTwoHuman, players[1]),{ once: true });
 
-        const playerTwoComputer = document.createElement('div')
-        playerTwoComputer.textContent='COMPUTER'
+        const playerTwoComputer = document.createElement('div');
+        playerTwoComputer.textContent='COMPUTER';
 
 
-        selectPlayerTwo.appendChild(playerTwoHuman)
-        selectPlayerTwo.appendChild(playerTwoComputer)
+        selectPlayerTwo.appendChild(playerTwoHuman);
+        selectPlayerTwo.appendChild(playerTwoComputer);
 
     selectPlayer.appendChild(selectPlayerOne);
     selectPlayer.appendChild(selectPlayerTwo);
-    document.querySelector('body').insertBefore(selectPlayer, document.querySelector('body').firstChild)
+    document.querySelector('body').insertBefore(selectPlayer, document.querySelector('body').firstChild);
 })(playerOne, playerTwo);
 
-(playerTwoHumanSelection = (parent, sibling, human) => {
+(playerTwoHumanSelection = (parent, sibling, human, humanName) => {
     parent.removeChild(sibling);
     const playerTwoName = document.createElement('input');
+    const submitNameBtn = document.createElement('button');
+    submitNameBtn.textContent = 'Submit Your Name'
     human.appendChild(playerTwoName);
+    human.appendChild(submitNameBtn);
+    submitNameBtn.addEventListener('click', e=> {
+        humanName.name = playerTwoName.value
+        parent.parentElement.remove()
+    })
 });
 
 (getIdElementFromDom = (id) => {
@@ -138,19 +145,20 @@ let gameBoard = [
 
 
 (newGame = (where, firstPlayer, secondPlayer) => {
-    gameBoard = [
-        ['', '', ''],
-        ['', '', ''],
-        ['', '', ''],
-    ];
+    location.reload()
+    // gameBoard = [
+    //     ['', '', ''],
+    //     ['', '', ''],
+    //     ['', '', ''],
+    // ];
 
-    (removeOldBoard = (domBoard) => {
-        while (domBoard.firstChild) {
-            domBoard.removeChild(domBoard.firstChild);
-        }
-    })(where);
-    createBoardOnScreen(where);
-    gamePlay(where, firstPlayer, secondPlayer);
+    // (removeOldBoard = (domBoard) => {
+    //     while (domBoard.firstChild) {
+    //         domBoard.removeChild(domBoard.firstChild);
+    //     }
+    // })(where);
+    // createBoardOnScreen(where);
+    // gamePlay(where, firstPlayer, secondPlayer);
 });
 
 (getIdElementFromDom('new-game')).addEventListener('click', _e => newGame((getIdElementFromDom('board')), playerOne, playerTwo))
