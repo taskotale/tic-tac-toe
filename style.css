@@ -1,3 +1,34 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+#select-player {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    background-color: pink;
+}
+
+#select-player>div {
+    width: 50%;
+    height: 80%;
+    background-color: green;
+    margin: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
 #board {
     background-color: grey;
     width: fit-content;
@@ -7,5 +38,5 @@
 
 #board>div {
     aspect-ratio: 1;
-    border: 1px solid black;
+    border: 1px solid rgb(0, 0, 0);
 }

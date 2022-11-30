@@ -1,3 +1,27 @@
+(player = (sign, turn) => {
+    let playerTurn = turn;
+    return {
+        sign: sign,
+        isTurn: () => playerTurn ? playerTurn = false : playerTurn = true
+    }
+});
+
+const playerOne = player('X', true);
+const playerTwo = player('O', false);
+
+(startGame = (...players) => {
+    const selectPlayer = document.createElement('div');
+    selectPlayer.id = 'select-player';
+    const selectPlayerOne = document.createElement('div');
+    const inputPlayerName = document.createElement('input');
+    selectPlayerOne.appendChild(inputPlayerName)
+    inputPlayerName.addEventListener('keyup', _e=> {players[0].name = inputPlayerName.value})
+    const selectPlayerTwo = document.createElement('div');
+    selectPlayer.appendChild(selectPlayerOne);
+    selectPlayer.appendChild(selectPlayerTwo);
+    document.querySelector('body').insertBefore(selectPlayer, document.querySelector('body').firstChild)
+})(playerOne,playerTwo);
+
 (getIdElementFromDom = (id) => {
     return document.getElementById(id)
 });
@@ -32,16 +56,6 @@ let gameBoard = [
 })(gameBoard);
 
 
-(player = (sign, turn) => {
-    let playerTurn = turn;
-    return {
-        sign: sign,
-        isTurn: () => playerTurn ? playerTurn = false : playerTurn = true
-    }
-});
-
-const playerOne = player('X', true);
-const playerTwo = player('O', false);
 
 (checkTurn = (player, otherPlayer) => {
     if (!player.isTurn()) {
@@ -90,11 +104,9 @@ const playerTwo = player('O', false);
             let playPosition = e.target;
             playPosition.textContent = checkTurn(firstPlayer, secondPlayer);
             gameBoard[playPosition.id][playPosition.classList] = playPosition.textContent;
-            console.log(checkWinner(gameBoard))
-            console.log('who '+(checkWinner(gameBoard) === ('X' | 'O')))
-        if (checkWinner(gameBoard) === 'X' || checkWinner(gameBoard) === 'O') {
+            if (checkWinner(gameBoard) === 'X' || checkWinner(gameBoard) === 'O') {
                 alert('winner is: ' + checkWinner(gameBoard))
-                confirm('do you want to play again?') ? newGame() : console.log('no')
+                confirm('do you want to play again?') ? newGame(whereToLook, firstPlayer, secondPlayer) : console.log('no')
             }
         },
             { once: true })
@@ -102,20 +114,21 @@ const playerTwo = player('O', false);
 })((getIdElementFromDom('board')), playerOne, playerTwo);
 
 
-const newGame = () => {
+(newGame = (where, firstPlayer, secondPlayer) => {
     gameBoard = [
         ['', '', ''],
         ['', '', ''],
         ['', '', ''],
     ];
+
     (removeOldBoard = (domBoard) => {
         while (domBoard.firstChild) {
             domBoard.removeChild(domBoard.firstChild);
         }
-    })((getIdElementFromDom('board')));
-    createBoardOnScreen(getIdElementFromDom('board'));
-    gamePlay((getIdElementFromDom('board')), playerOne, playerTwo);
-};
+    })(where);
+    createBoardOnScreen(where);
+    gamePlay(where, firstPlayer, secondPlayer);
+});
 
-(getIdElementFromDom('new-game')).addEventListener('click', newGame)
+(getIdElementFromDom('new-game')).addEventListener('click', _e => newGame((getIdElementFromDom('board')), playerOne, playerTwo))
 
