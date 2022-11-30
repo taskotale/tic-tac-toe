@@ -27,6 +27,36 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    gap: 3rem;
+}
+
+.first-player {
+    position: relative;;
+    height: 7rem;
+    width: 1rem;
+    rotate: 45deg;
+    border-radius: 50%;
+    background-color: blue;
+}
+.first-player::before {
+    position: absolute;
+    content: '';
+    height: 7rem;
+    width: 1rem;
+    rotate: 90deg;
+    border-radius: 50%;
+    background-color: blue;
+}
+
+.second-player {
+    display: flex;
+    flex-direction: column;
+}
+
+.second-player>div {
+    background-color: red;
+    height: 50%;
+    width: 100%;
 }
 
 #board {
