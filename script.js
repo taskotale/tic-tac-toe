@@ -6,6 +6,10 @@
     ];
 })();
 
+(getBoardFromDom = () => {
+    return domBoard = document.getElementById('board')
+})();
+
 (player = (sign, turn) => {
     let playerTurn = turn;
     return {
@@ -78,17 +82,13 @@
     })
 });
 
-(startGame = () => {
+(startGame = (firstPlayer, secondPlayer) => {
     const selectPlayer = document.createElement('div');
     selectPlayer.id = 'select-player';
-    getFirstPlayer(playerOne, selectPlayer);
-    getSecondPlayer(playerTwo, selectPlayer);
-    document.querySelector('body').insertBefore(selectPlayer, document.querySelector('body').firstChild);
-})();
-
-(getBoardFromDom = () => {
-    return domBoard = document.getElementById('board')
-})();
+    getFirstPlayer(firstPlayer, selectPlayer);
+    getSecondPlayer(secondPlayer, selectPlayer);
+    document.getElementById('game-play').insertBefore(selectPlayer, document.getElementById('game-play').firstChild);
+})(playerOne, playerTwo);
 
 (createBoardOnScreen = (whereTo) => {
     for (let i = 0; i < 3; i++) {
@@ -96,6 +96,7 @@
             const spot = document.createElement('div');
             spot.id = `${[i]}`;
             spot.classList = `${[j]}`;
+            spot.dataset = `${[i]}${[j]}`
             whereTo.appendChild(spot);
         }
     }
@@ -106,7 +107,7 @@
     for (let i = 0; i < 3; i++) {
         for (let j = 0; j < 3; j++) {
             if (board[i][j] == '') {
-                availableSpots.push(board[i][j])
+                availableSpots.push(`${[i] + [j]}`)
             }
         }
     }
@@ -157,12 +158,11 @@
             mainGameBoard[playPosition.id][playPosition.classList] = playPosition.textContent;
             if (checkWinner(mainGameBoard) === 'X' || checkWinner(mainGameBoard) === 'O') {
                 alert('winner is: ' + checkWinner(mainGameBoard));
-                confirm('do you want to play again?') ? newGame(whereToLook, players[0], players[1]) : console.log('no')
+                newGame(whereToLook, players[0], players[1])
             } else {
                 if (findAvailableSpots(mainGameBoard).length == 0) {
-                    console.log(findAvailableSpots(mainGameBoard).length)
                     alert('tie!');
-                    confirm('do you want to play again?') ? newGame(whereToLook, players[0], players[1]) : console.log('no')
+                    newGame(whereToLook, players[0], players[1])
                 }
             }
         },
@@ -172,7 +172,7 @@
 
 
 (newGame = (where, firstPlayer, secondPlayer) => {
-    location.reload()
+    if (confirm('do you want to play again?')) location.reload()
     // gameBoard = [
     //     ['', '', ''],
     //     ['', '', ''],
@@ -190,3 +190,39 @@
 (newGameBtn = () => {
     document.getElementById('new-game').addEventListener('click', e => newGame(board, playerOne, playerTwo))
 })();
+
+
+(computerDumbPlays = () => {
+    const randomPosition = findAvailableSpots(gameBoard)[Math.floor(Math.random() * findAvailableSpots(gameBoard).length)]
+    const i = randomPosition.charAt(0);
+    const j = randomPosition.charAt(1);
+    console.log(randomPosition)
+    console.log('pos 1:' + i)
+    console.log('pos 2:' + j)
+    const gridPos = document.querySelector(`#${}.${}`)
+    console.log('hey ' + gridPos)
+    console.log(typeof (gridPos))
+    console.log(gridPos)
+        ;
+    // gameBoard[randomPosition.id][randomPosition.classList] = playerTwo.sign;
+});
+// (gamePlay = (whereToLook, mainGameBoard, ...players) => {
+//     const grid = whereToLook.querySelectorAll('div');
+//     for (let i = 0; i < grid.length; i++) {
+//         grid[i].addEventListener('click', e => {
+//             let playPosition = e.target;
+//             playPosition.textContent = checkTurn(players[0], players[1]);
+//             mainGameBoard[playPosition.id][playPosition.classList] = playPosition.textContent;
+//             if (checkWinner(mainGameBoard) === 'X' || checkWinner(mainGameBoard) === 'O') {
+//                 alert('winner is: ' + checkWinner(mainGameBoard));
+//                 newGame(whereToLook, players[0], players[1])
+//             } else {
+//                 if (findAvailableSpots(mainGameBoard).length == 0) {
+//                     alert('tie!');
+//                     newGame(whereToLook, players[0], players[1])
+//                 }
+//             }
+//         },
+//             { once: true })
+//     }
+// })(domBoard, gameBoard, playerOne, playerTwo);
