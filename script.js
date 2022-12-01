@@ -4,7 +4,7 @@
         ['', '', ''],
         ['', '', ''],
     ];
-});
+})();
 
 (player = (sign, turn) => {
     let playerTurn = turn;
@@ -16,16 +16,17 @@
 
 (getPlayerOne = () => {
     return playerOne = player('X', true)
-});
+})();
+
 (getPlayerTwo = () => {
     return playerTwo = player('O', false)
-});
+})();
 
 (getFirstPlayer = (firstPlayer, whereToAppend) => {
     const selectPlayerOne = document.createElement('div');
     const inputPlayerName = document.createElement('input');
     selectPlayerOne.appendChild(inputPlayerName);
-    inputPlayerName.addEventListener('keyup', e => { firstPlayer.name = inputPlayerName.value });
+    inputPlayerName.addEventListener('keyup', e => firstPlayer.name = inputPlayerName.value);
     const firstPlayerSign = document.createElement('div');
     firstPlayerSign.classList = 'first-player';
     selectPlayerOne.appendChild(firstPlayerSign);
@@ -50,7 +51,7 @@
     parent.removeChild(sibling);
     const playerTwoName = document.createElement('input');
     const submitNameBtn = document.createElement('button');
-    submitNameBtn.textContent = 'Submit Your Name'
+    submitNameBtn.textContent = 'Start Game'
     human.appendChild(playerTwoName);
     human.appendChild(submitNameBtn);
     submitNameBtn.addEventListener('click', e => {
@@ -71,19 +72,23 @@
         computerName.name = compDumb.textContent;
         parent.parentElement.remove()
     })
+    compGenius.addEventListener('click', e => {
+        computerName.name = compGenius.textContent;
+        parent.parentElement.remove()
+    })
 });
 
-(startGame = (...players) => {
+(startGame = () => {
     const selectPlayer = document.createElement('div');
     selectPlayer.id = 'select-player';
-    getFirstPlayer(players[0], selectPlayer);
-    getSecondPlayer(players[1], selectPlayer);
+    getFirstPlayer(playerOne, selectPlayer);
+    getSecondPlayer(playerTwo, selectPlayer);
     document.querySelector('body').insertBefore(selectPlayer, document.querySelector('body').firstChild);
-})(getPlayerOne(), getPlayerTwo());
+})();
 
-(getIdElementFromDom = (id) => {
-    return document.getElementById(id)
-});
+(getBoardFromDom = () => {
+    return domBoard = document.getElementById('board')
+})();
 
 (createBoardOnScreen = (whereTo) => {
     for (let i = 0; i < 3; i++) {
@@ -94,7 +99,7 @@
             whereTo.appendChild(spot);
         }
     }
-})((getIdElementFromDom('board')));
+})(domBoard);
 
 (findAvailableSpots = (board) => {
     let availableSpots = [];
@@ -106,13 +111,9 @@
         }
     }
     return availableSpots
-})(getGameboard());
-
-
+})(gameBoard);
 
 (checkTurn = (player, otherPlayer) => {
-    console.log(player)
-    console.log(otherPlayer)
     if (!player.isTurn()) {
         return player.sign
     }
@@ -138,37 +139,36 @@
         if (areEqual(board[0][0], board[1][1], board[2][2])) {
             winner = board[0][0]
         }
-
         if (areEqual(board[0][2], board[1][1], board[2][0])) {
             winner = board[0][2]
         }
         return winner
     }
-
-    if (findAvailableSpots(board).length == 0) {
-        return 'it`s a tie'
-    }
-    return winnerIs();
+    return winnerIs()
 });
 
 
-(gamePlay = (whereToLook, gameBoard, ...players) => {
+(gamePlay = (whereToLook, mainGameBoard, ...players) => {
     const grid = whereToLook.querySelectorAll('div');
     for (let i = 0; i < grid.length; i++) {
         grid[i].addEventListener('click', e => {
-            console.log(players[0])
-            console.log(players[1])
             let playPosition = e.target;
             playPosition.textContent = checkTurn(players[0], players[1]);
-            gameBoard[playPosition.id][playPosition.classList] = playPosition.textContent;
-            if (checkWinner(gameBoard) === 'X' || checkWinner(gameBoard) === 'O') {
-                alert('winner is: ' + checkWinner(gameBoard))
+            mainGameBoard[playPosition.id][playPosition.classList] = playPosition.textContent;
+            if (checkWinner(mainGameBoard) === 'X' || checkWinner(mainGameBoard) === 'O') {
+                alert('winner is: ' + checkWinner(mainGameBoard));
                 confirm('do you want to play again?') ? newGame(whereToLook, players[0], players[1]) : console.log('no')
+            } else {
+                if (findAvailableSpots(mainGameBoard).length == 0) {
+                    console.log(findAvailableSpots(mainGameBoard).length)
+                    alert('tie!');
+                    confirm('do you want to play again?') ? newGame(whereToLook, players[0], players[1]) : console.log('no')
+                }
             }
         },
             { once: true })
     }
-})((getIdElementFromDom('board')), getGameboard(), getPlayerOne(), getPlayerTwo());
+})(domBoard, gameBoard, playerOne, playerTwo);
 
 
 (newGame = (where, firstPlayer, secondPlayer) => {
@@ -187,6 +187,6 @@
     // createBoardOnScreen(where);
     // gamePlay(where, firstPlayer, secondPlayer);
 });
-
-(getIdElementFromDom('new-game')).addEventListener('click', _e => newGame((getIdElementFromDom('board')), playerOne, playerTwo))
-
+(newGameBtn = () => {
+    document.getElementById('new-game').addEventListener('click', e => newGame(board, playerOne, playerTwo))
+})();
