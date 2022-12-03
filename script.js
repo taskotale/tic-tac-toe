@@ -149,25 +149,29 @@
 });
 
 
-(gamePlay = (whereToLook, mainGameBoard, ...players) => {
+(gamePlay = (whereToLook, mainGameBoard, firstPlayer, secondPlayer) => {
     const grid = whereToLook.querySelectorAll('div');
     for (let i = 0; i < grid.length; i++) {
         grid[i].addEventListener('click', e => {
             i = e.target.dataset.row;
             j = e.target.dataset.column;
-            let playPosition = domBoard.querySelector(`[data-row="${i}"][data-column="${j}"]`)
-            console.log(i + j)
-            let turn = checkTurn(players[0], players[1]);
+            let playPosition = whereToLook.querySelector(`[data-row="${i}"][data-column="${j}"]`)
+            let turn = checkTurn(firstPlayer, secondPlayer);
             playPosition.textContent = turn
             mainGameBoard[playPosition.dataset.row][playPosition.dataset.column] = playPosition.textContent;
-            if (findAvailableSpots(mainGameBoard).length > 0) computerDumbPlays()
+            if (findAvailableSpots(mainGameBoard).length > 0) {
+                console.log(secondPlayer.name)
+                if (secondPlayer.name === 'Dumb Computer'||secondPlayer.name ==='Genius Computer') {
+                    computerDumbPlays() 
+                }
+            }
             if (checkWinner(mainGameBoard) === 'X' || checkWinner(mainGameBoard) === 'O') {
                 alert('winner is: ' + checkWinner(mainGameBoard));
-                newGame(whereToLook, players[0], players[1])
+                newGame(whereToLook, firstPlayer, secondPlayer)
             } else {
                 if (findAvailableSpots(mainGameBoard).length == 0) {
                     alert('tie!');
-                    newGame(whereToLook, players[0], players[1])
+                    newGame(whereToLook, firstPlayer, secondPlayer)
                 }
             }
 
