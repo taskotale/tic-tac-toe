@@ -94,9 +94,9 @@
     for (let i = 0; i < 3; i++) {
         for (let j = 0; j < 3; j++) {
             const spot = document.createElement('div');
-            spot.id = `${[i]}`;
-            spot.classList = `${[j]}`;
-            spot.dataset = `${[i]}${[j]}`
+            spot.classList = 'grid-spot'
+            spot.dataset.column = `${[i]}`
+            spot.dataset.row = `${[j]}`
             whereTo.appendChild(spot);
         }
     }
@@ -153,9 +153,14 @@
     const grid = whereToLook.querySelectorAll('div');
     for (let i = 0; i < grid.length; i++) {
         grid[i].addEventListener('click', e => {
-            let playPosition = e.target;
-            playPosition.textContent = checkTurn(players[0], players[1]);
-            mainGameBoard[playPosition.id][playPosition.classList] = playPosition.textContent;
+            i = e.target.dataset.row;
+            j = e.target.dataset.column;
+            let playPosition = domBoard.querySelector(`[data-row="${i}"][data-column="${j}"]`)
+            console.log(i + j)
+            let turn = checkTurn(players[0], players[1]);
+            playPosition.textContent = turn
+            mainGameBoard[playPosition.dataset.row][playPosition.dataset.column] = playPosition.textContent;
+            if (findAvailableSpots(mainGameBoard).length > 0) computerDumbPlays()
             if (checkWinner(mainGameBoard) === 'X' || checkWinner(mainGameBoard) === 'O') {
                 alert('winner is: ' + checkWinner(mainGameBoard));
                 newGame(whereToLook, players[0], players[1])
@@ -165,6 +170,7 @@
                     newGame(whereToLook, players[0], players[1])
                 }
             }
+
         },
             { once: true })
     }
@@ -196,33 +202,7 @@
     const randomPosition = findAvailableSpots(gameBoard)[Math.floor(Math.random() * findAvailableSpots(gameBoard).length)]
     const i = randomPosition.charAt(0);
     const j = randomPosition.charAt(1);
-    console.log(randomPosition)
-    console.log('pos 1:' + i)
-    console.log('pos 2:' + j)
-    const gridPos = document.querySelector(`#${}.${}`)
-    console.log('hey ' + gridPos)
-    console.log(typeof (gridPos))
-    console.log(gridPos)
-        ;
-    // gameBoard[randomPosition.id][randomPosition.classList] = playerTwo.sign;
+    const gridPos = domBoard.querySelector(`[data-row="${i}"][data-column="${j}"]`)
+    gridPos.textContent = checkTurn(playerOne, playerTwo);
+    gameBoard[gridPos.dataset.row][gridPos.dataset.column] = gridPos.textContent;
 });
-// (gamePlay = (whereToLook, mainGameBoard, ...players) => {
-//     const grid = whereToLook.querySelectorAll('div');
-//     for (let i = 0; i < grid.length; i++) {
-//         grid[i].addEventListener('click', e => {
-//             let playPosition = e.target;
-//             playPosition.textContent = checkTurn(players[0], players[1]);
-//             mainGameBoard[playPosition.id][playPosition.classList] = playPosition.textContent;
-//             if (checkWinner(mainGameBoard) === 'X' || checkWinner(mainGameBoard) === 'O') {
-//                 alert('winner is: ' + checkWinner(mainGameBoard));
-//                 newGame(whereToLook, players[0], players[1])
-//             } else {
-//                 if (findAvailableSpots(mainGameBoard).length == 0) {
-//                     alert('tie!');
-//                     newGame(whereToLook, players[0], players[1])
-//                 }
-//             }
-//         },
-//             { once: true })
-//     }
-// })(domBoard, gameBoard, playerOne, playerTwo);
