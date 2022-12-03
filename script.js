@@ -82,14 +82,6 @@
     })
 });
 
-(startGame = (firstPlayer, secondPlayer) => {
-    const selectPlayer = document.createElement('div');
-    selectPlayer.id = 'select-player';
-    getFirstPlayer(firstPlayer, selectPlayer);
-    getSecondPlayer(secondPlayer, selectPlayer);
-    document.getElementById('game-play').insertBefore(selectPlayer, document.getElementById('game-play').firstChild);
-})(playerOne, playerTwo);
-
 (createBoardOnScreen = (whereTo) => {
     for (let i = 0; i < 3; i++) {
         for (let j = 0; j < 3; j++) {
@@ -100,7 +92,17 @@
             whereTo.appendChild(spot);
         }
     }
-})(domBoard);
+});
+
+(startGame = (firstPlayer, secondPlayer) => {
+    const selectPlayer = document.createElement('div');
+    selectPlayer.id = 'select-player';
+    getFirstPlayer(firstPlayer, selectPlayer);
+    getSecondPlayer(secondPlayer, selectPlayer);
+    document.getElementById('game-play').insertBefore(selectPlayer, document.getElementById('game-play').firstChild);
+    createBoardOnScreen(domBoard)
+})(playerOne, playerTwo);
+
 
 (findAvailableSpots = (board) => {
     let availableSpots = [];
@@ -158,9 +160,8 @@
             let playPosition = whereToLook.querySelector(`[data-row="${i}"][data-column="${j}"]`)
             let turn = checkTurn(firstPlayer, secondPlayer);
             playPosition.textContent = turn
-            mainGameBoard[playPosition.dataset.row][playPosition.dataset.column] = playPosition.textContent;
+            mainGameBoard[i][j] = playPosition.textContent;
             if (findAvailableSpots(mainGameBoard).length > 0) {
-                console.log(secondPlayer.name)
                 if (secondPlayer.name === 'Dumb Computer'||secondPlayer.name ==='Genius Computer') {
                     computerDumbPlays() 
                 }
