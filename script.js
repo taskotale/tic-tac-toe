@@ -162,17 +162,17 @@
             playPosition.textContent = turn
             mainGameBoard[i][j] = playPosition.textContent;
             if (findAvailableSpots(mainGameBoard).length > 0) {
-                if (secondPlayer.name === 'Dumb Computer'||secondPlayer.name ==='Genius Computer') {
-                    computerDumbPlays() 
+                if (secondPlayer.name === 'Dumb Computer' || secondPlayer.name === 'Genius Computer') {
+                    computerDumbPlays(mainGameBoard)
                 }
             }
             if (checkWinner(mainGameBoard) === 'X' || checkWinner(mainGameBoard) === 'O') {
                 alert('winner is: ' + checkWinner(mainGameBoard));
-                newGame(whereToLook, firstPlayer, secondPlayer)
+                newGame()
             } else {
                 if (findAvailableSpots(mainGameBoard).length == 0) {
                     alert('tie!');
-                    newGame(whereToLook, firstPlayer, secondPlayer)
+                    newGame()
                 }
             }
 
@@ -181,33 +181,19 @@
     }
 })(domBoard, gameBoard, playerOne, playerTwo);
 
-
-(newGame = (where, firstPlayer, secondPlayer) => {
-    if (confirm('do you want to play again?')) location.reload()
-    // gameBoard = [
-    //     ['', '', ''],
-    //     ['', '', ''],
-    //     ['', '', ''],
-    // ];
-
-    // (removeOldBoard = (domBoard) => {
-    //     while (domBoard.firstChild) {
-    //         domBoard.removeChild(domBoard.firstChild);
-    //     }
-    // })(where);
-    // createBoardOnScreen(where);
-    // gamePlay(where, firstPlayer, secondPlayer);
-});
-(newGameBtn = () => {
-    document.getElementById('new-game').addEventListener('click', e => newGame(board, playerOne, playerTwo))
-})();
-
-
-(computerDumbPlays = () => {
-    const randomPosition = findAvailableSpots(gameBoard)[Math.floor(Math.random() * findAvailableSpots(gameBoard).length)]
+(computerDumbPlays = (board) => {
+    const randomPosition = findAvailableSpots(board)[Math.floor(Math.random() * findAvailableSpots(board).length)]
     const i = randomPosition.charAt(0);
     const j = randomPosition.charAt(1);
     const gridPos = domBoard.querySelector(`[data-row="${i}"][data-column="${j}"]`)
     gridPos.textContent = checkTurn(playerOne, playerTwo);
-    gameBoard[gridPos.dataset.row][gridPos.dataset.column] = gridPos.textContent;
+    board[i][j] = gridPos.textContent;
 });
+
+(newGame = () => {
+    if (confirm('do you want to play again?')) location.reload()
+});
+
+(newGameBtn = () => {
+    document.getElementById('new-game').addEventListener('click', e => newGame())
+})();
