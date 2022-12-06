@@ -147,7 +147,7 @@
         }
         if (areEqual(board[0][2], board[1][1], board[2][0])) {
             winner = board[0][2]
-        } 
+        }
         return winner
     }
     return winnerIs()
@@ -197,16 +197,15 @@
 })();
 
 (geniusCompMove = (board) => {
-    console.log('im in')
     let move;
+    let count;
     (minimax = (tryBoard, maxi) => {
         let param = checkWinner(tryBoard)
         if (param === 'X') return -1;
         if (param === 'O') return 1;
         if (param === 'tie') return 0;
         if (maxi) {
-            console.log('maxi')
-            let topCount = -9999;
+            let topCount = -25000;
             for (let i = 0; i < 3; i++) {
                 for (let j = 0; j < 3; j++) {
                     if (tryBoard[i][j] == '') {
@@ -215,14 +214,13 @@
                         tryBoard[i][j] = '';
                         if (count > topCount) {
                             topCount = count;
-                            move = `${i}${j}`
                         }
                     }
                 }
             }
+            return topCount
         } else {
-            console.log('not-maxi')
-            let topCount = 9999;
+            let topCount = 25000;
             for (let i = 0; i < 3; i++) {
                 for (let j = 0; j < 3; j++) {
                     if (tryBoard[i][j] == '') {
@@ -231,14 +229,29 @@
                         tryBoard[i][j] = '';
                         if (count < topCount) {
                             topCount = count;
-                            move = `${i}${j}`
                         }
                     }
                 }
             }
+            return topCount
         }
+    })
 
-    })(board, false)
+    let minimumCount = -25000
 
+    for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+            if (board[i][j] == '') {
+                board[i][j] = 'O';
+                let count = minimax(board, false);
+                board[i][j] = '';
+                if (count > minimumCount) {
+                    minimumCount = count;
+                    move = `${i}${j}`
+                    console.log('after',move, minimumCount)
+                }
+            }
+        }
+    }
     return move
 });
