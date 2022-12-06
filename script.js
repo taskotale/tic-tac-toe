@@ -88,8 +88,8 @@
         for (let j = 0; j < 3; j++) {
             const spot = document.createElement('div');
             spot.classList = 'grid-spot'
-            spot.dataset.column = `${[i]}`
-            spot.dataset.row = `${[j]}`
+            spot.dataset.row = `${[i]}`
+            spot.dataset.column = `${[j]}`
             whereTo.appendChild(spot);
         }
     }
@@ -124,11 +124,14 @@
 });
 
 (checkWinner = (board) => {
-    let winner
+    let winner;
     areEqual = (a, b, c) => {
         return (a == b && b == c && a != '')
     }
     winnerIs = () => {
+        if (findAvailableSpots(board).length === 0) {
+            winner = 'tie'
+        }
         for (let i = 0; i < 3; i++) {
             if (areEqual(board[i][0], board[i][1], board[i][2])) {
                 winner = board[i][0]
@@ -144,7 +147,7 @@
         }
         if (areEqual(board[0][2], board[1][1], board[2][0])) {
             winner = board[0][2]
-        }
+        } 
         return winner
     }
     return winnerIs()
@@ -162,14 +165,9 @@
                 const position = computerPlays(mainGameBoard, secondPlayer.name);
                 if (position) printPlay(position.charAt(0), position.charAt(1), firstPlayer, secondPlayer, whereToLook, mainGameBoard)
             }
-            if (checkWinner(mainGameBoard) === 'X' || checkWinner(mainGameBoard) === 'O') {
+            if (checkWinner(mainGameBoard) === 'X' || checkWinner(mainGameBoard) === 'O' || checkWinner(mainGameBoard) === 'tie') {
                 alert('winner is: ' + checkWinner(mainGameBoard));
                 newGame()
-            } else {
-                if (findAvailableSpots(mainGameBoard).length == 0) {
-                    alert('tie!');
-                    newGame()
-                }
             }
         })
     }
@@ -180,7 +178,7 @@
         return findAvailableSpots(mainGameBoard)[Math.floor(Math.random() * findAvailableSpots(mainGameBoard).length)]
     }
     if (computerName === 'Genius Computer') {
-        return findAvailableSpots(mainGameBoard)[Math.floor(Math.random() * findAvailableSpots(mainGameBoard).length)]
+        return geniusCompMove(mainGameBoard)
     }
 });
 
@@ -197,3 +195,50 @@
 (newGameBtn = () => {
     document.getElementById('new-game').addEventListener('click', e => newGame())
 })();
+
+(geniusCompMove = (board) => {
+    console.log('im in')
+    let move;
+    (minimax = (tryBoard, maxi) => {
+        let param = checkWinner(tryBoard)
+        if (param === 'X') return -1;
+        if (param === 'O') return 1;
+        if (param === 'tie') return 0;
+        if (maxi) {
+            console.log('maxi')
+            let topCount = -9999;
+            for (let i = 0; i < 3; i++) {
+                for (let j = 0; j < 3; j++) {
+                    if (tryBoard[i][j] == '') {
+                        tryBoard[i][j] = 'O';
+                        let count = minimax(tryBoard, false);
+                        tryBoard[i][j] = '';
+                        if (count > topCount) {
+                            topCount = count;
+                            move = `${i}${j}`
+                        }
+                    }
+                }
+            }
+        } else {
+            console.log('not-maxi')
+            let topCount = 9999;
+            for (let i = 0; i < 3; i++) {
+                for (let j = 0; j < 3; j++) {
+                    if (tryBoard[i][j] == '') {
+                        tryBoard[i][j] = 'X';
+                        let count = minimax(tryBoard, true);
+                        tryBoard[i][j] = '';
+                        if (count < topCount) {
+                            topCount = count;
+                            move = `${i}${j}`
+                        }
+                    }
+                }
+            }
+        }
+
+    })(board, false)
+
+    return move
+});
