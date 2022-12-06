@@ -43,16 +43,17 @@
     selectPlayerTwo.classList = 'second-player'
     const playerTwoHuman = document.createElement('div');
     playerTwoHuman.textContent = 'HUMAN';
-    playerTwoHuman.addEventListener('click', e => playerTwoHumanSelection(selectPlayerTwo, playerTwoComputer, playerTwoHuman, secondPlayer), { once: true });
+    const showGamePlay = document.getElementById('game-play');
+    playerTwoHuman.addEventListener('click', e => playerTwoHumanSelection(selectPlayerTwo, playerTwoComputer, playerTwoHuman, secondPlayer,showGamePlay), { once: true });
     const playerTwoComputer = document.createElement('div');
     playerTwoComputer.textContent = 'COMPUTER';
-    playerTwoComputer.addEventListener('click', e => playerTwoComputerSelection(selectPlayerTwo, playerTwoHuman, playerTwoComputer, secondPlayer), { once: true });
+    playerTwoComputer.addEventListener('click', e => playerTwoComputerSelection(selectPlayerTwo, playerTwoHuman, playerTwoComputer, secondPlayer,showGamePlay), { once: true });
     selectPlayerTwo.appendChild(playerTwoHuman);
     selectPlayerTwo.appendChild(playerTwoComputer);
     whereToAppend.appendChild(selectPlayerTwo);
 });
 
-(playerTwoHumanSelection = (parent, sibling, human, humanName) => {
+(playerTwoHumanSelection = (parent, sibling, human, humanName, showNext) => {
     parent.removeChild(sibling);
     const playerTwoName = document.createElement('input');
     const submitNameBtn = document.createElement('button');
@@ -62,13 +63,15 @@
     submitNameBtn.addEventListener('click', e => {
         humanName.name = playerTwoName.value
         parent.parentElement.remove()
+        showNext.classList.toggle('show-flex')
     })
 });
 
-(playerTwoComputerSelection = (parent, sibling, computer, computerName) => {
+(playerTwoComputerSelection = (parent, sibling, computer, computerName, showNext) => {
     parent.removeChild(sibling);
     const compDumb = document.createElement('div');
     compDumb.textContent = 'Dumb Computer';
+    console.log(compDumb.value)
     const compGenius = document.createElement('div');
     compGenius.textContent = 'Genius Computer';
     computer.appendChild(compDumb);
@@ -76,10 +79,12 @@
     compDumb.addEventListener('click', e => {
         computerName.name = compDumb.textContent;
         parent.parentElement.remove()
+        showNext.classList.toggle('show-flex')
     })
     compGenius.addEventListener('click', e => {
         computerName.name = compGenius.textContent;
         parent.parentElement.remove()
+        showNext.classList.toggle('show-flex')
     })
 });
 
@@ -100,8 +105,8 @@
     selectPlayer.id = 'select-player';
     getFirstPlayer(firstPlayer, selectPlayer);
     getSecondPlayer(secondPlayer, selectPlayer);
-    document.getElementById('game-play').insertBefore(selectPlayer, document.getElementById('game-play').firstChild);
-    createBoardOnScreen(boardOnDom)
+    document.getElementById('body').insertBefore(selectPlayer, document.getElementById('game-play'));
+    createBoardOnScreen(boardOnDom);
 });
 
 (findAvailableSpots = (board) => {
@@ -193,7 +198,7 @@
 });
 
 (newGameBtn = () => {
-    document.getElementById('new-game').addEventListener('click', e => newGame())
+    document.getElementById('new-game-btn').addEventListener('click', e => newGame())
 })();
 
 (geniusCompMove = (board) => {
@@ -248,7 +253,6 @@
                 if (count > minimumCount) {
                     minimumCount = count;
                     move = `${i}${j}`
-                    console.log('after',move, minimumCount)
                 }
             }
         }
