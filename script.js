@@ -181,14 +181,14 @@
         if (checkWinner(mainGameBoard) === 'X' || checkWinner(mainGameBoard) === 'O' || checkWinner(mainGameBoard) === 'tie') {
             showWhoIsPlaying(checkWinner(mainGameBoard), whereToLook, true, firstPlayer.name, secondPlayer.name)
             return
-        } else { setTimeout(() => showWhoIsPlaying(secondPlayer.name, whereToLook), 1000) }
+        } else { setTimeout(() => showWhoIsPlaying(secondPlayer.name, whereToLook), 900) }
         if (!checkWinner(mainGameBoard)) {
             setTimeout(() => {
                 const position = computerPlays(mainGameBoard, secondPlayer.name);
                 if (position) whoTurn = printPlay(position.charAt(0), position.charAt(1), firstPlayer, secondPlayer, whereToLook, mainGameBoard)
-                setTimeout(() => showWhoIsPlaying(firstPlayer.name, whereToLook), 1000)
+                setTimeout(() => showWhoIsPlaying(firstPlayer.name, whereToLook), 900)
                 return
-            }, 3000)
+            }, 2300)
         }
     })
 }
