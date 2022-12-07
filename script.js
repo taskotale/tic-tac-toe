@@ -175,13 +175,11 @@
 (gamePlay = (whereToLook, mainGameBoard, firstPlayer, secondPlayer) => {
     startGame(firstPlayer, secondPlayer, whereToLook);
     whereToLook.addEventListener('click', e => {
-        let winner = false;
         if (e.target.textContent === '') {
             printPlay(e.target.dataset.row, e.target.dataset.column, firstPlayer, secondPlayer, whereToLook, mainGameBoard);
         } else return
         if (checkWinner(mainGameBoard) === 'X' || checkWinner(mainGameBoard) === 'O' || checkWinner(mainGameBoard) === 'tie') {
-            winner = true
-            showWhoIsPlaying(checkWinner(mainGameBoard), whereToLook, winner, firstPlayer.name, secondPlayer.name)
+            showWhoIsPlaying(checkWinner(mainGameBoard), whereToLook, true, firstPlayer.name, secondPlayer.name)
             return
         }
         setTimeout(() => {
@@ -206,15 +204,14 @@
 
 (printPlay = (row, column, firstPlayer, secondPlayer, whereToLook, mainGameBoard) => {
     const gridPos = whereToLook.querySelector(`[data-row="${row}"][data-column="${column}"]`)
-    gridPos.textContent = checkTurn(firstPlayer, secondPlayer)
-    mainGameBoard[row][column] = gridPos.textContent;
-    setTimeout(() => {
-        if (gridPos.textContent === 'X') {
-            showWhoIsPlaying(secondPlayer.name, whereToLook)
-        } else {
-            showWhoIsPlaying(firstPlayer.name, whereToLook)
-        }
-    }, 500)
+    const whoPlays = checkTurn(firstPlayer, secondPlayer)
+    gridPos.textContent = whoPlays
+    mainGameBoard[row][column] = whoPlays
+ setTimeout(()=>{   if (whoPlays === 'X') {
+        showWhoIsPlaying(secondPlayer.name, whereToLook)
+    } else {
+        showWhoIsPlaying(firstPlayer.name, whereToLook)
+    }},500)
 });
 
 (showWhoIsPlaying = (currentPlayer, appendTo, check, onePlayerName, twoPlayerName) => {
