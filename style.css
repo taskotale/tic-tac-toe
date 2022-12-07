@@ -18,10 +18,12 @@ body {
 
 .hide {
     display: none;
+    animation: fade-out 1s;
 }
 
 .show-flex {
     display: flex;
+    animation: fade-in 1s;
 }
 
 header {
@@ -146,6 +148,7 @@ input {
     grid-template-rows: repeat(3, 100px);
     font-family: 'Courier New', Courier, monospace;
     border: none;
+    animation: fade-in 1s;
 }
 
 #board>div {
@@ -204,4 +207,24 @@ input {
     font-family: var(--fonts);
     font-size: 80px;
     text-align: center;
+    animation: fade-in 1s;
 }
+
+
+@keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  @keyframes fade-out {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
