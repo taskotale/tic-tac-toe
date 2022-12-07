@@ -21,11 +21,11 @@
 });
 
 (getPlayerOne = () => {
-    return playerOne = player('Pero', 'X', true)
+    return playerOne = player('Jacky', 'X', true)
 })();
 
 (getPlayerTwo = () => {
-    return playerTwo = player('Jovo', 'O', false)
+    return playerTwo = player('Johnny', 'O', false)
 })();
 
 (getFirstPlayer = (firstPlayer, whereToAppend) => {
@@ -173,30 +173,32 @@
 
 (gamePlay = (whereToLook, mainGameBoard, firstPlayer, secondPlayer) => {
     startGame(firstPlayer, secondPlayer, whereToLook);
+    let turnPlay;
     whereToLook.addEventListener('click', e => {
         if (e.target.textContent === '') {
-            whoTurn = printPlay(e.target.dataset.row, e.target.dataset.column, firstPlayer, secondPlayer, whereToLook, mainGameBoard);
+            turnPlay = printPlay(e.target.dataset.row, e.target.dataset.column, firstPlayer, secondPlayer, whereToLook, mainGameBoard);
         } else return
         if (checkWinner(mainGameBoard) === 'X' || checkWinner(mainGameBoard) === 'O' || checkWinner(mainGameBoard) === 'tie') {
             showWhoIsPlaying(checkWinner(mainGameBoard), whereToLook, true, firstPlayer.name, secondPlayer.name)
             return
         } else {
-            secondPlayer.name !== 'Jovo' ? setTimeout(() => showWhoIsPlaying(secondPlayer.name, whereToLook), 900) : console.log('smart choice');
+            if (turnPlay === 'X') { setTimeout(() => showWhoIsPlaying(secondPlayer.name, whereToLook), 900); }
+            else { setTimeout(() => showWhoIsPlaying(firstPlayer.name, whereToLook), 900); }
         }
         if (!checkWinner(mainGameBoard)) {
             setTimeout(() => {
                 const position = computerPlays(mainGameBoard, secondPlayer.name);
-                if (position) whoTurn = printPlay(position.charAt(0), position.charAt(1), firstPlayer, secondPlayer, whereToLook, mainGameBoard)
-                setTimeout(() => {
-                    if (checkWinner(mainGameBoard) === 'X' || checkWinner(mainGameBoard) === 'O' || checkWinner(mainGameBoard) === 'tie') {
-                        showWhoIsPlaying(checkWinner(mainGameBoard), whereToLook, true, firstPlayer.name, secondPlayer.name)
-                    } else { showWhoIsPlaying(firstPlayer.name, whereToLook) }
-                }, 900)
-                return
+                if (position) {
+                    turnPlay = printPlay(position.charAt(0), position.charAt(1), firstPlayer, secondPlayer, whereToLook, mainGameBoard)
+                    setTimeout(() => {
+                        if (checkWinner(mainGameBoard) === 'X' || checkWinner(mainGameBoard) === 'O' || checkWinner(mainGameBoard) === 'tie') {
+                            showWhoIsPlaying(checkWinner(mainGameBoard), whereToLook, true, firstPlayer.name, secondPlayer.name)
+                        } else { showWhoIsPlaying(firstPlayer.name, whereToLook) }
+                    }, 900)
+                    return
+                }
             }, 2300)
-
         }
-
     })
 }
 )(domBoard, gameBoard, playerOne, playerTwo);
@@ -215,6 +217,7 @@
     const whoPlays = checkTurn(firstPlayer, secondPlayer)
     gridPos.textContent = whoPlays
     mainGameBoard[row][column] = whoPlays
+    return whoPlays
 });
 
 (showWhoIsPlaying = (currentPlayer, appendTo, check, onePlayerName, twoPlayerName) => {
