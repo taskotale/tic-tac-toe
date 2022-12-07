@@ -185,7 +185,7 @@
                     const position = computerPlays(mainGameBoard, secondPlayer.name);
                     if (position) printPlay(position.charAt(0), position.charAt(1), firstPlayer, secondPlayer, whereToLook, mainGameBoard)
                 }
-            }, 3000)
+            }, 2500)
             if (checkWinner(mainGameBoard) === 'X' || checkWinner(mainGameBoard) === 'O' || checkWinner(mainGameBoard) === 'tie') {
                 showWhoIsPlaying(checkWinner(mainGameBoard), whereToLook, true, firstPlayer.name, secondPlayer.name)
             }
@@ -210,7 +210,7 @@
         showWhoIsPlaying(secondPlayer.name, whereToLook)
     } else {
         showWhoIsPlaying(firstPlayer.name, whereToLook)
-    }},1500)
+    }},1000)
 });
 
 (newGame = () => {
