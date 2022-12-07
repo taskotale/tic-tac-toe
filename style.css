@@ -1,7 +1,7 @@
 :root {
     --base-color: white;
-    --alternative-color: rgb(41, 41, 167);
-    --accent-color: rgb(206, 86, 86);
+    --alternative-color: rgb(110, 110, 230);
+    --accent-color: rgb(177, 37, 37);
     --fonts: "Papyrus", "copperplate", sans-serif;
 }
 
@@ -19,6 +19,7 @@ body {
 .hide {
     display: none;
 }
+
 .show-flex {
     display: flex;
 }
@@ -29,24 +30,25 @@ header {
     color: var(--accent-color);
     font-size: 3rem;
     padding: 1rem;
+    height: 20%;
 }
 
 #select-player {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-evenly;
-    height: 90vh;
+    height: 80%;
     width: 100%;
     background-color: var(--base-color);
+    gap: 1rem;
 }
 
 #select-player>div {
     width: 80%;
-    height: 30%;
+    height: 40%;
     background-color: var(--alternative-color);
-    color: var(--accent-color);
-    border-radius: 10%;
+    color: var(--base-color);
+    border-radius: 3%;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -92,10 +94,11 @@ input {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
 }
 
 .second-player::before {
-    content: 'Select the second player!';
+    content: 'Select the second player:';
     color: var(--base-color);
     font-family: var(--fonts);
     font-size: 1.5rem;
@@ -104,11 +107,18 @@ input {
 .second-player>div {
     font-family: var(--fonts);
     font-size: 1.25rem;
-    margin: 1rem;
+    margin: 0.5rem;
 }
 
-.second-player>div:has(button) {
-    position: relative;
+
+#start-button {
+    padding: 0.5rem;
+    font-family: var(--fonts);
+    background-color: var(--base-color);
+    font-size: larger;
+    color: var(--accent-color);
+    border-color: var(--alternative-color);
+    border-radius: 5%;
 }
 
 .second-player>div>button {
@@ -117,7 +127,11 @@ input {
     bottom: -5%;
 }
 
-#game-play{
+.underlined {
+    border-bottom: 3px solid var(--accent-color);
+}
+
+#game-play {
     height: 80%;
     flex-direction: column;
     align-items: center;
@@ -140,19 +154,49 @@ input {
     text-align: center;
     font-size: 80px;
 }
-#board>div[data-row="0"]{
+
+#board>div[data-row="0"] {
     border-top: none;
 }
-#board>div[data-row="2"]{
+
+#board>div[data-row="2"] {
     border-bottom: none;
 }
-#board>div[data-column="0"]{
+
+#board>div[data-column="0"] {
     border-left: none;
 }
-#board>div[data-column="2"]{
+
+#board>div[data-column="2"] {
     border-right: none;
 }
 
 #new-game-btn {
- 
+    padding: 1rem;
+    font-family: var(--fonts);
+    background-color: var(--base-color);
+    font-size: larger;
+    color: var(--accent-color);
+    border-color: var(--alternative-color);
+    border-radius: 5%;
+}
+
+#display-message {
+    scale: 0.9;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    height: 50%;
+    width: 90%;
+    background-color: rgba(255, 255, 255, 0.861);
+    color: var(--accent-color);
+    font-family: var(--fonts);
+    font-size: 80px;
+    text-align: center;
 }

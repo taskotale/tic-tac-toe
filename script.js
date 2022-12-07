@@ -13,9 +13,9 @@
 (player = (sign, turn) => {
     let playerTurn = turn
     return {
-        playerTurn,
+        playerTurn: playerTurn,
         sign: sign,
-        isTurn: () => playerTurn ? playerTurn = false : playerTurn = true
+        isTurn: () => this.playerTurn ? this.playerTurn = false : this.playerTurn = true
     }
 });
 
@@ -44,12 +44,16 @@
     const playerTwoHuman = document.createElement('div');
     playerTwoHuman.textContent = 'HUMAN';
     const showGamePlay = document.getElementById('game-play');
-    playerTwoHuman.addEventListener('click', e => playerTwoHumanSelection(selectPlayerTwo, playerTwoComputer, playerTwoHuman, secondPlayer,showGamePlay), { once: true });
+    playerTwoHuman.addEventListener('click', e => playerTwoHumanSelection(selectPlayerTwo, playerTwoComputer, playerTwoHuman, secondPlayer, showGamePlay), { once: true });
     const playerTwoComputer = document.createElement('div');
     playerTwoComputer.textContent = 'COMPUTER';
-    playerTwoComputer.addEventListener('click', e => playerTwoComputerSelection(selectPlayerTwo, playerTwoHuman, playerTwoComputer, secondPlayer,showGamePlay), { once: true });
+    playerTwoComputer.addEventListener('click', e => playerTwoComputerSelection(selectPlayerTwo, playerTwoHuman, playerTwoComputer, secondPlayer, showGamePlay), { once: true });
+    const startGameBtn = document.createElement('button')
+    startGameBtn.id = 'start-button'
+    startGameBtn.textContent = 'Start Game!'
     selectPlayerTwo.appendChild(playerTwoHuman);
     selectPlayerTwo.appendChild(playerTwoComputer);
+    selectPlayerTwo.appendChild(startGameBtn);
     whereToAppend.appendChild(selectPlayerTwo);
 });
 
@@ -60,32 +64,42 @@
     submitNameBtn.textContent = 'Start Game'
     human.appendChild(playerTwoName);
     human.appendChild(submitNameBtn);
-    submitNameBtn.addEventListener('click', e => {
-        humanName.name = playerTwoName.value
-        parent.parentElement.remove()
-        showNext.classList.toggle('show-flex')
-    })
+    playerTwoName.addEventListener('keyup', e => humanName.name = playerTwoName.value);
+    document.querySelector('#start-button').addEventListener('click', e => startGameBtn(parent, showNext))
 });
 
 (playerTwoComputerSelection = (parent, sibling, computer, computerName, showNext) => {
     parent.removeChild(sibling);
     const compDumb = document.createElement('div');
     compDumb.textContent = 'Dumb Computer';
-    console.log(compDumb.value)
     const compGenius = document.createElement('div');
     compGenius.textContent = 'Genius Computer';
     computer.appendChild(compDumb);
     computer.appendChild(compGenius);
     compDumb.addEventListener('click', e => {
         computerName.name = compDumb.textContent;
-        parent.parentElement.remove()
-        showNext.classList.toggle('show-flex')
+        compDumb.classList = 'underlined';
+        compGenius.classList.remove('underlined');
+        computer.appendChild(compDumb);
+        computer.appendChild(compGenius);
+        console.log(computerName.name)
     })
     compGenius.addEventListener('click', e => {
         computerName.name = compGenius.textContent;
-        parent.parentElement.remove()
-        showNext.classList.toggle('show-flex')
+        compGenius.classList = 'underlined'
+        compDumb.classList.remove('underlined');
+        computer.appendChild(compDumb);
+        computer.appendChild(compGenius);
+        console.log(computerName.name)
     })
+    document.querySelector('#start-button').addEventListener('click', e => startGameBtn(parent, showNext))
+
+});
+
+(startGameBtn = (removePlayerSelection, showGame) => {
+    removePlayerSelection.parentElement.remove()
+    showGame.classList.toggle('show-flex')
+    showWhoIsPlaying(playerOne.name, showGame)
 });
 
 (createBoardOnScreen = (whereTo) => {
@@ -122,7 +136,7 @@
 });
 
 (checkTurn = (player, otherPlayer) => {
-    if (!player.isTurn()) {
+    if (player.isTurn()) {
         return player.sign
     }
     return otherPlayer.sign
@@ -166,13 +180,15 @@
             if (e.target.textContent === '') {
                 printPlay(e.target.dataset.row, e.target.dataset.column, firstPlayer, secondPlayer, whereToLook, mainGameBoard);
             } else return
-            if (findAvailableSpots(mainGameBoard).length > 0) {
-                const position = computerPlays(mainGameBoard, secondPlayer.name);
-                if (position) printPlay(position.charAt(0), position.charAt(1), firstPlayer, secondPlayer, whereToLook, mainGameBoard)
-            }
+            setTimeout(() => {
+                if (findAvailableSpots(mainGameBoard).length > 0) {
+                    const position = computerPlays(mainGameBoard, secondPlayer.name);
+                    if (position) printPlay(position.charAt(0), position.charAt(1), firstPlayer, secondPlayer, whereToLook, mainGameBoard)
+                }
+            }, 1000)
             if (checkWinner(mainGameBoard) === 'X' || checkWinner(mainGameBoard) === 'O' || checkWinner(mainGameBoard) === 'tie') {
-                alert('winner is: ' + checkWinner(mainGameBoard));
-                newGame()
+                showWhoIsPlaying(checkWinner(mainGameBoard), whereToLook, true, firstPlayer.name, secondPlayer.name)
+                return
             }
         })
     }
@@ -191,6 +207,11 @@
     const gridPos = whereToLook.querySelector(`[data-row="${row}"][data-column="${column}"]`)
     gridPos.textContent = checkTurn(firstPlayer, secondPlayer)
     mainGameBoard[row][column] = gridPos.textContent;
+    if (gridPos.textContent === 'X') {
+        showWhoIsPlaying(secondPlayer.name, whereToLook)
+    } else {
+        showWhoIsPlaying(firstPlayer.name, whereToLook)
+    }
 });
 
 (newGame = () => {
@@ -241,9 +262,7 @@
             return topCount
         }
     })
-
     let minimumCount = -25000
-
     for (let i = 0; i < 3; i++) {
         for (let j = 0; j < 3; j++) {
             if (board[i][j] == '') {
@@ -258,4 +277,19 @@
         }
     }
     return move
+});
+
+(showWhoIsPlaying = (currentPlayer, appendTo, check, onePlayerName, twoPlayerName) => {
+    const displayMessage = document.createElement('div')
+    displayMessage.textContent = '';
+    displayMessage.id = 'display-message'
+    if(!check) displayMessage.textContent = `It's ${currentPlayer}'s turn!`
+    if(check) {
+        currentPlayer === 'X'?displayMessage.textContent = `The winner is ${onePlayerName}`:
+        currentPlayer === 'O'?displayMessage.textContent = `The winner is ${twoPlayerName}`:
+        displayMessage.textContent = `It's a tie!`
+    }
+    console.log(displayMessage.textContent)
+    appendTo.appendChild(displayMessage)
+    if(!check) setTimeout(() => displayMessage.remove(), 1000);
 });
