@@ -174,24 +174,26 @@
 
 (gamePlay = (whereToLook, mainGameBoard, firstPlayer, secondPlayer) => {
     startGame(firstPlayer, secondPlayer, whereToLook);
-    const grid = whereToLook.querySelectorAll('div');
-    for (let i = 0; i < grid.length; i++) {
-        grid[i].addEventListener('click', e => {
-            if (e.target.textContent === '') {
-                printPlay(e.target.dataset.row, e.target.dataset.column, firstPlayer, secondPlayer, whereToLook, mainGameBoard);
-            } else return
-            setTimeout(() => {
-                if (findAvailableSpots(mainGameBoard).length > 0) {
-                    const position = computerPlays(mainGameBoard, secondPlayer.name);
-                    if (position) printPlay(position.charAt(0), position.charAt(1), firstPlayer, secondPlayer, whereToLook, mainGameBoard)
-                }
-            }, 2500)
-            if (checkWinner(mainGameBoard) === 'X' || checkWinner(mainGameBoard) === 'O' || checkWinner(mainGameBoard) === 'tie') {
-                showWhoIsPlaying(checkWinner(mainGameBoard), whereToLook, true, firstPlayer.name, secondPlayer.name)
+    whereToLook.addEventListener('click', e => {
+        let winner = false;
+        if (e.target.textContent === '') {
+            printPlay(e.target.dataset.row, e.target.dataset.column, firstPlayer, secondPlayer, whereToLook, mainGameBoard);
+        } else return
+        if (checkWinner(mainGameBoard) === 'X' || checkWinner(mainGameBoard) === 'O' || checkWinner(mainGameBoard) === 'tie') {
+            winner = true
+            showWhoIsPlaying(checkWinner(mainGameBoard), whereToLook, winner, firstPlayer.name, secondPlayer.name)
+            return
+        }
+        setTimeout(() => {
+            if (findAvailableSpots(mainGameBoard).length > 0) {
+                const position = computerPlays(mainGameBoard, secondPlayer.name);
+                if (position) printPlay(position.charAt(0), position.charAt(1), firstPlayer, secondPlayer, whereToLook, mainGameBoard)
+                return
             }
-        })
-    }
-})(domBoard, gameBoard, playerOne, playerTwo);
+        }, 2000)
+    })
+}
+)(domBoard, gameBoard, playerOne, playerTwo);
 
 (computerPlays = (mainGameBoard, computerName) => {
     if (computerName === 'Dumb Computer') {
@@ -206,11 +208,28 @@
     const gridPos = whereToLook.querySelector(`[data-row="${row}"][data-column="${column}"]`)
     gridPos.textContent = checkTurn(firstPlayer, secondPlayer)
     mainGameBoard[row][column] = gridPos.textContent;
-    setTimeout(()=>{if (gridPos.textContent === 'X') {
-        showWhoIsPlaying(secondPlayer.name, whereToLook)
-    } else {
-        showWhoIsPlaying(firstPlayer.name, whereToLook)
-    }},1000)
+    setTimeout(() => {
+        if (gridPos.textContent === 'X') {
+            showWhoIsPlaying(secondPlayer.name, whereToLook)
+        } else {
+            showWhoIsPlaying(firstPlayer.name, whereToLook)
+        }
+    }, 500)
+});
+
+(showWhoIsPlaying = (currentPlayer, appendTo, check, onePlayerName, twoPlayerName) => {
+    const displayMessage = document.createElement('div')
+    displayMessage.textContent = '';
+    displayMessage.id = 'display-message'
+    if (!check) displayMessage.textContent = `It's ${currentPlayer}'s turn!`
+    if (check) {
+        currentPlayer === 'X' ? displayMessage.textContent = `The winner is ${onePlayerName}` :
+            currentPlayer === 'O' ? displayMessage.textContent = `The winner is ${twoPlayerName}` :
+                displayMessage.textContent = `It's a tie!`;
+    }
+    console.log(displayMessage.textContent)
+    appendTo.appendChild(displayMessage)
+    if (!check) setTimeout(() => displayMessage.remove(), 1000);
 });
 
 (newGame = () => {
@@ -276,19 +295,4 @@
         }
     }
     return move
-});
-
-(showWhoIsPlaying = (currentPlayer, appendTo, check, onePlayerName, twoPlayerName) => {
-    const displayMessage = document.createElement('div')
-    displayMessage.textContent = '';
-    displayMessage.id = 'display-message'
-    if(!check) displayMessage.textContent = `It's ${currentPlayer}'s turn!`
-    if(check) {
-        currentPlayer === 'X'?displayMessage.textContent = `The winner is ${onePlayerName}`:
-        currentPlayer === 'O'?displayMessage.textContent = `The winner is ${twoPlayerName}`:
-        displayMessage.textContent = `It's a tie!`;
-    }
-    console.log(displayMessage.textContent)
-    appendTo.appendChild(displayMessage)
-    if(!check) setTimeout(() => displayMessage.remove(), 1000);
 });

@@ -179,6 +179,7 @@ input {
     color: var(--accent-color);
     border-color: var(--alternative-color);
     border-radius: 5%;
+    z-index: 99;
 }
 
 #display-message {
