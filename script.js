@@ -286,7 +286,7 @@
     if(check) {
         currentPlayer === 'X'?displayMessage.textContent = `The winner is ${onePlayerName}`:
         currentPlayer === 'O'?displayMessage.textContent = `The winner is ${twoPlayerName}`:
-        displayMessage.textContent = `It's a tie!`
+        displayMessage.textContent = `It's a tie!`;
     }
     console.log(displayMessage.textContent)
     appendTo.appendChild(displayMessage)
