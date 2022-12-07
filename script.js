@@ -185,10 +185,9 @@
                     const position = computerPlays(mainGameBoard, secondPlayer.name);
                     if (position) printPlay(position.charAt(0), position.charAt(1), firstPlayer, secondPlayer, whereToLook, mainGameBoard)
                 }
-            }, 1500)
+            }, 3000)
             if (checkWinner(mainGameBoard) === 'X' || checkWinner(mainGameBoard) === 'O' || checkWinner(mainGameBoard) === 'tie') {
                 showWhoIsPlaying(checkWinner(mainGameBoard), whereToLook, true, firstPlayer.name, secondPlayer.name)
-                return
             }
         })
     }
@@ -207,11 +206,11 @@
     const gridPos = whereToLook.querySelector(`[data-row="${row}"][data-column="${column}"]`)
     gridPos.textContent = checkTurn(firstPlayer, secondPlayer)
     mainGameBoard[row][column] = gridPos.textContent;
-    if (gridPos.textContent === 'X') {
+    setTimeout(()=>{if (gridPos.textContent === 'X') {
         showWhoIsPlaying(secondPlayer.name, whereToLook)
     } else {
         showWhoIsPlaying(firstPlayer.name, whereToLook)
-    }
+    }},1500)
 });
 
 (newGame = () => {
