@@ -138,7 +138,6 @@ input {
     justify-content: space-around;
 }
 
-
 #board {
     width: fit-content;
     background-color: var(--base-color);
@@ -146,6 +145,7 @@ input {
     grid-template-columns: repeat(3, 100px);
     grid-template-rows: repeat(3, 100px);
     font-family: 'Courier New', Courier, monospace;
+    border: none;
 }
 
 #board>div {
