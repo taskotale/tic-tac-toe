@@ -10,9 +10,10 @@
     return domBoard = document.getElementById('board')
 })();
 
-(player = (sign, turn) => {
+(player = (name, sign, turn) => {
     let playerTurn = turn
     return {
+        name: name,
         playerTurn: playerTurn,
         sign: sign,
         isTurn: () => this.playerTurn ? this.playerTurn = false : this.playerTurn = true
@@ -20,11 +21,11 @@
 });
 
 (getPlayerOne = () => {
-    return playerOne = player('X', true)
+    return playerOne = player('Pero', 'X', true)
 })();
 
 (getPlayerTwo = () => {
-    return playerTwo = player('O', false)
+    return playerTwo = player('Jovo', 'O', false)
 })();
 
 (getFirstPlayer = (firstPlayer, whereToAppend) => {
@@ -82,7 +83,6 @@
         compGenius.classList.remove('underlined');
         computer.appendChild(compDumb);
         computer.appendChild(compGenius);
-        console.log(computerName.name)
     })
     compGenius.addEventListener('click', e => {
         computerName.name = compGenius.textContent;
@@ -90,7 +90,6 @@
         compDumb.classList.remove('underlined');
         computer.appendChild(compDumb);
         computer.appendChild(compGenius);
-        console.log(computerName.name)
     })
     document.querySelector('#start-button').addEventListener('click', e => startGameBtn(parent, showNext))
 
@@ -181,15 +180,23 @@
         if (checkWinner(mainGameBoard) === 'X' || checkWinner(mainGameBoard) === 'O' || checkWinner(mainGameBoard) === 'tie') {
             showWhoIsPlaying(checkWinner(mainGameBoard), whereToLook, true, firstPlayer.name, secondPlayer.name)
             return
-        } else { setTimeout(() => showWhoIsPlaying(secondPlayer.name, whereToLook), 900) }
+        } else {
+            secondPlayer.name !== 'Jovo' ? setTimeout(() => showWhoIsPlaying(secondPlayer.name, whereToLook), 900) : console.log('smart choice');
+        }
         if (!checkWinner(mainGameBoard)) {
             setTimeout(() => {
                 const position = computerPlays(mainGameBoard, secondPlayer.name);
                 if (position) whoTurn = printPlay(position.charAt(0), position.charAt(1), firstPlayer, secondPlayer, whereToLook, mainGameBoard)
-                setTimeout(() => showWhoIsPlaying(firstPlayer.name, whereToLook), 900)
+                setTimeout(() => {
+                    if (checkWinner(mainGameBoard) === 'X' || checkWinner(mainGameBoard) === 'O' || checkWinner(mainGameBoard) === 'tie') {
+                        showWhoIsPlaying(checkWinner(mainGameBoard), whereToLook, true, firstPlayer.name, secondPlayer.name)
+                    } else { showWhoIsPlaying(firstPlayer.name, whereToLook) }
+                }, 900)
                 return
             }, 2300)
+
         }
+
     })
 }
 )(domBoard, gameBoard, playerOne, playerTwo);
@@ -220,7 +227,6 @@
             currentPlayer === 'O' ? displayMessage.textContent = `The winner is ${twoPlayerName}` :
                 displayMessage.textContent = `It's a tie!`;
     }
-    console.log(displayMessage.textContent)
     appendTo.appendChild(displayMessage)
     if (!check) setTimeout(() => displayMessage.remove(), 1000);
 });
